@@ -1,54 +1,73 @@
-import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ActivityIndicator, Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import { gql } from 'apollo-boost';
+import * as WebBrowser from 'expo-web-browser';
+import { useQuery } from '@apollo/react-hooks';
 
-import { MonoText } from '../components/StyledText';
+import StackPanel from '../components/primary/StackPanel';
+import Text from '../components/primary/Text';
+import { COLORS } from '../constants';
+
+const LATEST_FIGURES = gql`
+  {
+    latest {
+      confirmed
+      recoveries
+      deaths
+      lastUpdated
+    }
+  }
+`;
 
 export default function HomeScreen() {
+  const { loading, error, data } = useQuery(LATEST_FIGURES);
+
+  if (error) {
+    return (
+      <StackPanel>
+        <Text> Error fetching latest data</Text>
+      </StackPanel>
+    );
+  }
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/robot-dev.png')
-                : require('../assets/images/robot-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
-        </View>
-
-        <View style={styles.getStartedContainer}>
-          <DevelopmentModeNotice />
-
-          <Text style={styles.getStartedText}>Open up the code for this screen:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>screens/HomeScreen.js</MonoText>
-          </View>
-
-          <Text style={styles.getStartedText}>
-            Change any of the text, save the file, and your app will automatically reload.
-          </Text>
-        </View>
-
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-        <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</MonoText>
-        </View>
-      </View>
-    </View>
+    <StackPanel>
+      {loading && <ActivityIndicator size="small" color={COLORS.darkGray} />}
+      {!loading && data && (
+        <StackPanel style={styles.container}>
+          <StackPanel row flex={false} danger style={styles.cardContainer}>
+            <StackPanel style={styles.card}>
+              <Text center large>
+                {data.latest.confirmed}
+              </Text>
+              <Text center caption>
+                confirmed Cases
+              </Text>
+            </StackPanel>
+            <StackPanel style={styles.card}>
+              <Text center large>
+                {data.latest.recoveries}
+              </Text>
+              <Text center caption>
+                Total recoveries
+              </Text>
+            </StackPanel>
+            <StackPanel style={styles.card}>
+              <Text center large>
+                {data.latest.deaths}
+              </Text>
+              <Text center caption>
+                Total Deaths
+              </Text>
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+      )}
+      <StackPanel style={styles.tabBarInfoContainer}>
+        <TouchableOpacity onPress={handleLearnMorePress} style={styles.helpLink}>
+          <Text style={styles.helpLinkText}>Learn more</Text>
+        </TouchableOpacity>
+      </StackPanel>
+    </StackPanel>
   );
 }
 
@@ -56,81 +75,28 @@ HomeScreen.navigationOptions = {
   header: null,
 };
 
-function DevelopmentModeNotice() {
-  if (__DEV__) {
-    const learnMoreButton = (
-      <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
-        Learn more
-      </Text>
-    );
-
-    return (
-      <Text style={styles.developmentModeText}>
-        Development mode is enabled: your app will be slower but you can use useful development
-        tools. {learnMoreButton}
-      </Text>
-    );
-  } else {
-    return (
-      <Text style={styles.developmentModeText}>
-        You are not in development mode: your app will run at full speed.
-      </Text>
-    );
-  }
-}
-
 function handleLearnMorePress() {
-  WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/workflow/development-mode/');
-}
-
-function handleHelpPress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/get-started/create-a-new-app/#making-your-first-change'
-  );
+  WebBrowser.openBrowserAsync('https://covid19.ncdc.gov.ng/');
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
-  },
-  contentContainer: {
-    paddingTop: 30,
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
     paddingHorizontal: 4,
   },
+  cardContainer: {
+    paddingTop: 12,
+  },
+  card: {
+    backgroundColor: COLORS.white,
+    paddingVertical: 16,
+    marginHorizontal: 6,
+    borderRadius: 4,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 4, height: 12 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+  },
+
   getStartedText: {
     fontSize: 17,
     color: 'rgba(96,100,109, 1)',

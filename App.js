@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
 import useLinking from './navigation/useLinking';
 import config from './config';
@@ -13,6 +14,7 @@ import AppNavigator from './navigation/AppNavigator';
 
 const client = new ApolloClient({
   uri: config.baseURL,
+  cache: new InMemoryCache(),
 });
 
 export default function App(props) {
