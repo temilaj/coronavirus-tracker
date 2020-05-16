@@ -1,12 +1,19 @@
-import * as React from 'react';
-import { ActivityIndicator, Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { ActivityIndicator, StyleSheet, ImageBackground, StatusBar } from 'react-native';
 import { gql } from 'apollo-boost';
 import * as WebBrowser from 'expo-web-browser';
 import { useQuery } from '@apollo/react-hooks';
+import { ScrollView } from 'react-native-gesture-handler';
+import { timeToNow } from '../utils/dateFormatter';
 
 import StackPanel from '../components/primary/StackPanel';
 import Text from '../components/primary/Text';
-import { COLORS } from '../constants';
+import { COLORS, SIZES, Images, calcWidth, FONTFAMILY, calcHeight } from '../constants';
+import StatCard from '../components/secondary/StatCard';
+import ClosedCases from '../components/secondary/ClosedCases';
+import StatesTable from '../components/secondary/StatesTable';
+import hexToRgba from 'hex-to-rgba';
+import Divider from '../components/secondary/Divider';
 
 const LATEST_FIGURES = gql`
   {
@@ -16,58 +23,108 @@ const LATEST_FIGURES = gql`
       deaths
       lastUpdated
     }
+
+    todaysCases {
+      recoveries
+      confirmed
+      deaths
+      lastUpdated
+    }
+
+    resultsByState {
+      state
+      recoveries
+      confirmed
+      deaths
+    }
   }
 `;
 
 export default function HomeScreen() {
-  const { loading, error, data } = useQuery(LATEST_FIGURES);
+  const [confirmed, setConfirmed] = useState(0);
+  const [activeCases, setActiveCases] = useState(0);
+  const [recoveries, setRecoveries] = useState(0);
+  const [recordDate, setRecordDate] = useState(null);
+  const [deaths, setDeaths] = useState(0);
+
+  const [confirmedInc, setConfirmedInc] = useState(0);
+  const [recoveryInc, setRecoveryInc] = useState(0);
+  const [deathInc, setDeathInc] = useState(0);
+
+  const { loading, error, data } = useQuery(LATEST_FIGURES, {
+    onCompleted: () => {
+      setConfirmed(data.latest.confirmed);
+      setRecoveries(data.latest.recoveries);
+      setDeaths(data.latest.deaths);
+      setActiveCases(data.latest.confirmed - data.latest.recoveries);
+      setRecordDate(data.latest.lastUpdated);
+
+      setConfirmedInc(data.todaysCases.confirmed);
+      setRecoveryInc(data.todaysCases.recoveries);
+      setDeathInc(data.todaysCases.deaths);
+    },
+  });
 
   if (error) {
     return (
-      <StackPanel>
+      <StackPanel safe center>
         <Text> Error fetching latest data</Text>
       </StackPanel>
     );
   }
+
   return (
-    <StackPanel>
-      {loading && <ActivityIndicator size="small" color={COLORS.darkGray} />}
-      {!loading && data && (
-        <StackPanel style={styles.container}>
-          <StackPanel row flex={false} danger style={styles.cardContainer}>
-            <StackPanel style={styles.card}>
-              <Text center large>
-                {data.latest.confirmed}
-              </Text>
-              <Text center caption>
-                confirmed Cases
-              </Text>
-            </StackPanel>
-            <StackPanel style={styles.card}>
-              <Text center large>
-                {data.latest.recoveries}
-              </Text>
-              <Text center caption>
-                Total recoveries
-              </Text>
-            </StackPanel>
-            <StackPanel style={styles.card}>
-              <Text center large>
-                {data.latest.deaths}
-              </Text>
-              <Text center caption>
-                Total Deaths
-              </Text>
+    <ImageBackground source={Images.background.home} style={styles.container} resizeMode="cover">
+      <StatusBar barStyle="light-content" />
+      <StackPanel style={styles.overlay} />
+      <ScrollView style={styles.scrollViewContainer} contentContainerStyle={styles.scrollViewContent}>
+        <StackPanel style={styles.titleContainer}>
+          <Text white style={styles.appName}>
+            COVID-19 Tracker
+          </Text>
+          <Text white style={styles.title}>
+            Nigeria
+          </Text>
+          {loading && <ActivityIndicator size="large" color={COLORS.white} />}
+          {!loading && data && (
+            <Text white small>
+              last updated {timeToNow(new Date(recordDate), { addSuffix: true })}
+            </Text>
+          )}
+        </StackPanel>
+        {!loading && data && (
+          <StackPanel style={styles.contentContainer}>
+            <StackPanel style={styles.statsContainer}>
+              <StackPanel row center middle>
+                <StatCard text="CONFIRMED" stat={confirmed} statColor={COLORS.red} increment={confirmedInc}></StatCard>
+                <StatCard
+                  text="ACTIVE"
+                  stat={activeCases}
+                  statColor={COLORS.primary}
+                  increment={confirmedInc - (recoveryInc + deathInc)}
+                ></StatCard>
+              </StackPanel>
+              <StackPanel row center middle>
+                <StatCard
+                  text="RECOVERIES"
+                  stat={recoveries}
+                  statColor={COLORS.green}
+                  increment={recoveryInc}
+                ></StatCard>
+                <StatCard text="DEATHS" stat={deaths} statColor={COLORS.gray} increment={deathInc}></StatCard>
+              </StackPanel>
+              <ClosedCases confirmed={confirmed} recoveries={recoveries} deaths={deaths} />
+              {data.resultsByState && <StatesTable data={data.resultsByState} />}
             </StackPanel>
           </StackPanel>
-        </StackPanel>
-      )}
-      <StackPanel style={styles.tabBarInfoContainer}>
-        <TouchableOpacity onPress={handleLearnMorePress} style={styles.helpLink}>
-          <Text style={styles.helpLinkText}>Learn more</Text>
-        </TouchableOpacity>
-      </StackPanel>
-    </StackPanel>
+        )}
+        {/* <StackPanel style={{}}>
+          <TouchableOpacity onPress={handleLearnMorePress} style={styles.helpLink}>
+            <Text style={styles.helpLinkText}>Learn more</Text>
+          </TouchableOpacity>
+        </StackPanel> */}
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
@@ -80,57 +137,50 @@ function handleLearnMorePress() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 4,
+  container: {},
+  titleContainer: {
+    paddingHorizontal: 16,
+    marginTop: calcHeight(8.33),
+    marginBottom: calcHeight(18),
   },
-  cardContainer: {
-    paddingTop: 12,
+  title: {
+    fontSize: SIZES.h1,
+    fontFamily: FONTFAMILY.openSansSemiBold,
+    letterSpacing: SIZES.letterSpacingDefault,
   },
-  card: {
-    backgroundColor: COLORS.white,
-    paddingVertical: 16,
-    marginHorizontal: 6,
-    borderRadius: 4,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 4, height: 12 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
+  appName: {
+    fontSize: SIZES.small,
+    fontFamily: FONTFAMILY.openSansSemiBold,
+    letterSpacing: SIZES.letterSpacingDefault,
+    marginBottom: 10,
+  },
+  overlay: {
+    backgroundColor: hexToRgba(COLORS.black, 0.4),
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+  },
+  scrollViewContainer: {
+    // paddingTop: SIZES.deviceHeight/ 3,
+    paddingTop: 16,
+  },
+  scrollViewContent: {},
+  contentContainer: {
+    backgroundColor: COLORS.backgroundGray,
+    paddingTop: 30,
+    paddingHorizontal: 16,
+  },
+  statsContainer: {
+    top: -SIZES.deviceHeight / 7,
+  },
+  closedCasesContainer: {
+    marginTop: 32,
+    paddingHorizontal: 8,
+    paddingVertical: 12,
   },
 
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
   helpContainer: {
     marginTop: 15,
     alignItems: 'center',
