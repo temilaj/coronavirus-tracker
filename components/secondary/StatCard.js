@@ -23,7 +23,7 @@ class StatCard extends PureComponent {
         shadowOffset: { width: 4, height: 8 },
         shadowOpacity: 0.2,
         shadowRadius: 12,
-        height: SIZES.deviceHeight / 5,
+        height: SIZES.deviceHeight / 4,
         maxHeight: 180,
       },
     ]);

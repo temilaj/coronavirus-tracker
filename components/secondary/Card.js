@@ -36,7 +36,7 @@ Card.defaultProps = {
 
 const styles = StyleSheet.create({
   card: {
-    padding: 8,
+    // padding: 8,
     backgroundColor: COLORS.white,
     borderRadius: 4,
     shadowColor: COLORS.black,
