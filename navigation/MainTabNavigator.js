@@ -14,7 +14,7 @@ export default function BottomTabNavigator({ navigation, route }) {
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
   navigation.setOptions({ headerTitle: getHeaderTitle(route) });
   const tabBarOptions = {
-    activeTintColor: COLORS.primary,
+    activeTintColor: COLORS.navy,
     inactiveTintColor: COLORS.lightGray,
     labelStyle: {
       fontSize: calcWidth(3.33),
