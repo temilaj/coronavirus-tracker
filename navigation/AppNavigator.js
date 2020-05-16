@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 function AppNavigator() {
   return (
     <>
-      <Stack.Navigator>
+      <Stack.Navigator headerMode="none">
         <Stack.Screen name="Root" component={MainTabNavigator} />
       </Stack.Navigator>
     </>
