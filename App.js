@@ -4,7 +4,7 @@ import { SplashScreen } from 'expo';
 import { Asset } from 'expo-asset';
 
 import * as Font from 'expo-font';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
@@ -43,6 +43,7 @@ export default function App(props) {
           cacheImages,
           Font.loadAsync({
             ...Ionicons.font,
+            ...Feather.font,
             'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
             openSans: require('./assets/fonts/OpenSans-Regular.ttf'),
             'OpenSans-Light': require('./assets/fonts/OpenSans-Light.ttf'),

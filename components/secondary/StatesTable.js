@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
 import StackPanel from '../primary/StackPanel';
 import Text from '../primary/Text';
-import { COLORS, FONTFAMILY } from '../../constants';
+import { COLORS, FONTFAMILY, SIZES } from '../../constants';
 import StateMapper from '../../utils/StateMapper';
 
 export default function StatesTable(props) {
@@ -19,7 +20,10 @@ export default function StatesTable(props) {
                 <Text>{StateMapper[item.state] || item.state}</Text>
               </StackPanel>
               <StackPanel flex={false}>
-                <Text style={styles.figureText}>{item.confirmed}</Text>
+                <StackPanel row>
+                  <Feather name="bar-chart" color={COLORS.navy} size={SIZES.caption} style={styles.icon} />
+                  <Text style={styles.figureText}>{item.confirmed}</Text>
+                </StackPanel>
               </StackPanel>
             </StackPanel>
           </StackPanel>
@@ -41,5 +45,9 @@ const styles = StyleSheet.create({
   },
   figureText: {
     fontFamily: FONTFAMILY.copse,
+  },
+  icon: {
+    marginTop: 2,
+    marginRight: 1,
   },
 });
