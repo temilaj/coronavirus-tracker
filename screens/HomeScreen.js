@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, StyleSheet, ImageBackground, StatusBar } from 'react-native';
+import { ActivityIndicator, StyleSheet, ImageBackground, StatusBar, TouchableOpacity } from 'react-native';
 import { gql } from 'apollo-boost';
 import * as WebBrowser from 'expo-web-browser';
 import { useQuery } from '@apollo/react-hooks';
@@ -92,8 +92,8 @@ export default function HomeScreen() {
             </Text>
           )}
         </StackPanel>
-        {!loading && data && (
-          <StackPanel style={styles.contentContainer}>
+        <StackPanel style={styles.contentContainer}>
+          {!loading && data && (
             <StackPanel style={styles.statsContainer}>
               <StackPanel row center middle>
                 <StatCard text="CONFIRMED" stat={confirmed} statColor={COLORS.red} increment={confirmedInc}></StatCard>
@@ -116,13 +116,13 @@ export default function HomeScreen() {
               <ClosedCases confirmed={confirmed} recoveries={recoveries} deaths={deaths} />
               {data.resultsByState && <StatesTable data={data.resultsByState} />}
             </StackPanel>
+          )}
+          <StackPanel style={styles.helpContainer}>
+            <TouchableOpacity onPress={handleLearnMorePress} style={styles.helpLink}>
+              <Text style={styles.helpLinkText}>Learn more</Text>
+            </TouchableOpacity>
           </StackPanel>
-        )}
-        {/* <StackPanel style={{}}>
-          <TouchableOpacity onPress={handleLearnMorePress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>Learn more</Text>
-          </TouchableOpacity>
-        </StackPanel> */}
+        </StackPanel>
       </ScrollView>
     </ImageBackground>
   );
@@ -174,19 +174,19 @@ const styles = StyleSheet.create({
   },
   statsContainer: {
     top: -SIZES.deviceHeight / 7,
+    marginBottom: -SIZES.deviceHeight / 7.5,
   },
   closedCasesContainer: {
     marginTop: 32,
     paddingHorizontal: 8,
     paddingVertical: 12,
   },
-
   helpContainer: {
-    marginTop: 15,
+    marginBottom: 15,
     alignItems: 'center',
   },
   helpLink: {
-    paddingVertical: 15,
+    marginVertical: 12,
   },
   helpLinkText: {
     fontSize: 14,
