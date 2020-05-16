@@ -1,4 +1,5 @@
+import Images from '../constants/Images';
 import { COLORS, FONTFAMILY } from './Theme';
 import { calcWidth, calcHeight, SIZES, FONTS } from './Layout';
 
-export { COLORS, FONTFAMILY, calcWidth, calcHeight, SIZES, FONTS };
+export { COLORS, FONTFAMILY, calcWidth, calcHeight, SIZES, FONTS, Images };

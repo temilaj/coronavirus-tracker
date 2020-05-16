@@ -22,7 +22,8 @@ const SIZES = {
   h3: calcWidth(4.167), //fontSize 15
   caption: calcWidth(3.61), //fontSize 13
   small: calcWidth(3.06), //fontsize 11
-  large: calcWidth(8.333),
+  smaller: calcWidth(2.5),
+  large: calcWidth(9.44),
   defaultButtonHeight: calcHeight(7.5),
   maxButtonHeight: 54,
 
