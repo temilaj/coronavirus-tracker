@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
+import MapsScreen from '../screens/MapsScreen';
 import { COLORS, FONTFAMILY, calcWidth, SIZES } from '../constants';
 
 const BottomTab = createBottomTabNavigator();
@@ -14,7 +15,7 @@ export default function BottomTabNavigator({ navigation, route }) {
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
   navigation.setOptions({ headerTitle: getHeaderTitle(route) });
   const tabBarOptions = {
-    activeTintColor: COLORS.navy,
+    activeTintColor: COLORS.red,
     inactiveTintColor: COLORS.lightGray,
     labelStyle: {
       fontSize: calcWidth(3.33),
@@ -36,6 +37,14 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: 'Home',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-home" />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Map"
+        component={MapsScreen}
+        options={{
+          title: 'Map',
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-pin" />,
         }}
       />
     </BottomTab.Navigator>
