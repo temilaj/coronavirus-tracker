@@ -14,6 +14,7 @@ import useLinking from './navigation/useLinking';
 import config from './config';
 import AppNavigator from './navigation/AppNavigator';
 import imageCache from './constants/imageCache';
+import { NetworkProvider } from './context/NetworkProvider';
 
 const client = new ApolloClient({
   uri: config.baseURL,
@@ -74,14 +75,16 @@ export default function App(props) {
     return null;
   } else {
     return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <ApolloProvider client={client}>
-          <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
-            <AppNavigator />
-          </NavigationContainer>
-        </ApolloProvider>
-      </View>
+      <NetworkProvider>
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <ApolloProvider client={client}>
+            <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
+              <AppNavigator />
+            </NavigationContainer>
+          </ApolloProvider>
+        </View>
+      </NetworkProvider>
     );
   }
 }
@@ -90,6 +93,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
 });
