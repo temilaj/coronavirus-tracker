@@ -1,83 +1,41 @@
 const StateMapper = {
-  abia: {
-    name: 'Abia',
-  },
-  adamawa: {
-    name: 'Adamawa',
-  },
-  'akwa-ibom': {
-    name: 'Akwa Ibom',
-  },
-  anambra: {
-    name: 'Anambra',
-  },
-  bauchi: {
-    name: 'Bauchi',
-  },
-  bayelsa: {
-    name: 'Bayelsa',
-  },
-  benue: {
-    name: 'Benue',
-  },
-  borno: {
-    name: 'Borno',
-  },
-  'cross-river': {
-    name: 'Cross River',
-  },
-  delta: {
-    name: 'Delta',
-  },
-  ebonyi: {
-    name: 'Ebonyi',
-  },
-  edo: {
-    name: 'Edo',
-  },
-  ekiti: {
-    name: 'Ekiti',
-  },
-  enugu: {
-    name: 'Enugu',
-  },
-  fct: {
-    name: 'FCT - Abuja',
-  },
-  gombe: {
-    name: 'Gombe',
-  },
-  imo: {
-    name: 'Imo',
-  },
-  jigawa: {
-    name: 'Jigawa',
-  },
-  kaduna: {
-    name: 'Kaduna',
-  },
-  kano: {
-    name: 'kano',
-  },
-  katsina: {
-    name: 'Katsina',
-  },
-  kebbi: { name: 'Kebbi' },
-  kogi: { name: 'Kogi' },
-  kwara: { name: 'Kwara' },
-  lagos: { name: 'Lagos' },
-  nasarawa: { name: 'Nasarawa' },
-  niger: { name: 'Niger' },
-  ogun: { name: 'Ogun' },
-  ondo: { name: 'Ondo' },
-  osun: { name: 'Osun' },
-  oyo: { name: 'Oyo' },
-  plateau: { name: 'Plateau' },
-  rivers: { name: 'Rivers' },
-  sokoto: { name: 'Sokoto' },
-  taraba: { name: 'Taraba' },
-  yobe: { name: 'Yobe' },
-  zamfara: { name: 'Zamfara' },
+  abia: { lat: 5.532003041, long: 7.486002487, name: 'Abia' },
+  adamawa: { lat: 10.2703408, long: 13.2700321, name: 'Adamawa' },
+  'akwa-ibom': { lat: 5.038963, long: 7.90947, name: 'Akwa Ibom' },
+  anambra: { lat: 6.010519, long: 6.910345, name: 'Anambra' },
+  bauchi: { lat: 10.314159, long: 9.846282, name: 'Bauchi' },
+  bayelsa: { lat: 4.7719, long: 6.0699, name: 'Bayelsa' },
+  benue: { lat: 7.190399596, long: 8.129984089, name: 'Benue' },
+  borno: { lat: 11.833333, long: 13.15, name: 'Borno' },
+  'cross-river': { lat: 4.982873, long: 8.334503, name: 'Cross River' },
+  delta: { lat: 5.890427265, long: 5.680004434, name: 'Delta' },
+  ebonyi: { lat: 6.2649, long: 8.0137, name: 'Ebonyi' },
+  edo: { lat: 6.340477314, long: 5.620008096, name: 'Edo' },
+  ekiti: { lat: 7.621111, long: 5.221389, name: 'Ekiti' },
+  enugu: { lat: 6.459964, long: 7.548949, name: 'Enugu' },
+  fct: { lat: 9.083333149, long: 7.533328002, name: 'FCT - Abuja' },
+  gombe: { lat: 10.29044293, long: 11.16995357, name: 'Gombe' },
+  imo: { lat: 5.47631, long: 7.025853, name: 'Imo' },
+  jigawa: { lat: 11.7991891, long: 9.350334607, name: 'Jigawa' },
+  kaduna: { lat: 10.609319, long: 7.429504, name: 'Kaduna' },
+  kano: { lat: 12.0, long: 8.516667, name: 'kano' },
+  katsina: { lat: 12.985531, long: 7.617144, name: 'Katsina' },
+  kebbi: { lat: 12.45041445, long: 4.199939737, name: 'Kebbi' },
+  kogi: { lat: 7.800388203, long: 6.739939737, name: 'Kogi' },
+  kwara: { lat: 8.5, long: 4.55, name: 'Kwara' },
+  lagos: { lat: 6.605874, long: 3.349149, name: 'Lagos' },
+  nasarawa: { lat: 11.085541, long: 7.719945, name: 'Nasarawa' },
+  niger: { lat: 9.583555, long: 6.546316, name: 'Niger' },
+  ogun: { lat: 7.160427265, long: 3.350017455, name: 'Ogun' },
+  ondo: { lat: 7.250771, long: 5.210266, name: 'Ondo' },
+  osun: { lat: 7.629959329, long: 4.179992634, name: 'Osun' },
+  oyo: { lat: 7.401962, long: 3.917313, name: 'Oyo' },
+  plateau: { lat: 9.896527, long: 8.858331, name: 'Plateau' },
+  rivers: { lat: 4.824167, long: 7.033611, name: 'Rivers' },
+  sokoto: { lat: 13.005873, long: 5.247552, name: 'Sokoto' },
+  taraba: { lat: 7.870409769, long: 9.780012572, name: 'Taraba' },
+  yobe: { lat: 11.74899608, long: 11.96600457, name: 'Yobe' },
+  zamfara: { lat: 12.1704057, long: 6.659996296, name: 'Zamfara' },
 };
 
 export default StateMapper;
