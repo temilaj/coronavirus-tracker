@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import hexToRgba from 'hex-to-rgba';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -20,6 +20,7 @@ class StatCard extends PureComponent {
         borderRadius: 4,
         padding: 8,
         shadowColor: COLORS.black,
+        ...(Platform.OS === 'android' ? { elevation: 6 } : {}),
         shadowOffset: { width: 4, height: 8 },
         shadowOpacity: 0.2,
         shadowRadius: 12,
