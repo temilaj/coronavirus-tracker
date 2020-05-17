@@ -12,7 +12,6 @@ export default function StatesTable(props) {
   return (
     <StackPanel style={styles.container}>
       {data.map((item) => {
-        console.log(item);
         return (
           <StackPanel style={styles.stateCard} key={item.state}>
             <StackPanel row style={{ justifyContent: 'space-between' }}>
