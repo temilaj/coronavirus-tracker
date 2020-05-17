@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "covid-tracker-mobile",
-    "slug": "covid-tracker-mobile",
+    "name": "Coronavirus tracker Nigeria",
+    "slug": "coronavirus-tracker-nigeria",
     "platforms": [
       "ios",
       "android",
@@ -23,7 +23,19 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.temilajumoke.covidTracker",
+      "buildNumber": "0.5.0"
+    },
+    "android": {
+      "package": "com.temilajumoke.covidTracker",
+      "versionCode":  2,
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_PHONE_STATE",
+        "READ_CONTACTS"
+      ]
     }
   }
 }
