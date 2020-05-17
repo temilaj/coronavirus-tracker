@@ -8,12 +8,11 @@ import { timeToNow } from '../utils/dateFormatter';
 
 import StackPanel from '../components/primary/StackPanel';
 import Text from '../components/primary/Text';
-import { COLORS, SIZES, Images, calcWidth, FONTFAMILY, calcHeight } from '../constants';
+import { COLORS, SIZES, Images, FONTFAMILY, calcHeight } from '../constants';
 import StatCard from '../components/secondary/StatCard';
 import ClosedCases from '../components/secondary/ClosedCases';
 import StatesTable from '../components/secondary/StatesTable';
 import hexToRgba from 'hex-to-rgba';
-import Divider from '../components/secondary/Divider';
 
 const LATEST_FIGURES = gql`
   {
@@ -29,13 +28,6 @@ const LATEST_FIGURES = gql`
       confirmed
       deaths
       lastUpdated
-    }
-
-    resultsByState {
-      state
-      recoveries
-      confirmed
-      deaths
     }
   }
 `;
@@ -94,34 +86,41 @@ export default function HomeScreen() {
         </StackPanel>
         <StackPanel style={styles.contentContainer}>
           {!loading && data && (
-            <StackPanel style={styles.statsContainer}>
-              <StackPanel row center middle>
-                <StatCard text="CONFIRMED" stat={confirmed} statColor={COLORS.red} increment={confirmedInc}></StatCard>
-                <StatCard
-                  text="ACTIVE"
-                  stat={activeCases}
-                  statColor={COLORS.primary}
-                  increment={confirmedInc - (recoveryInc + deathInc)}
-                ></StatCard>
+            <>
+              <StackPanel style={styles.statsContainer}>
+                <StackPanel row center middle>
+                  <StatCard
+                    text="CONFIRMED"
+                    stat={confirmed}
+                    statColor={COLORS.red}
+                    increment={confirmedInc}
+                  ></StatCard>
+                  <StatCard
+                    text="ACTIVE"
+                    stat={activeCases}
+                    statColor={COLORS.primary}
+                    increment={confirmedInc - (recoveryInc + deathInc)}
+                  ></StatCard>
+                </StackPanel>
+                <StackPanel row center middle>
+                  <StatCard
+                    text="RECOVERIES"
+                    stat={recoveries}
+                    statColor={COLORS.green}
+                    increment={recoveryInc}
+                  ></StatCard>
+                  <StatCard text="DEATHS" stat={deaths} statColor={COLORS.gray} increment={deathInc}></StatCard>
+                </StackPanel>
+                <ClosedCases confirmed={confirmed} recoveries={recoveries} deaths={deaths} />
+                <StatesTable />
               </StackPanel>
-              <StackPanel row center middle>
-                <StatCard
-                  text="RECOVERIES"
-                  stat={recoveries}
-                  statColor={COLORS.green}
-                  increment={recoveryInc}
-                ></StatCard>
-                <StatCard text="DEATHS" stat={deaths} statColor={COLORS.gray} increment={deathInc}></StatCard>
+              <StackPanel style={styles.helpContainer}>
+                <TouchableOpacity onPress={handleLearnMorePress} style={styles.helpLink}>
+                  <Text style={styles.helpLinkText}>Learn more</Text>
+                </TouchableOpacity>
               </StackPanel>
-              <ClosedCases confirmed={confirmed} recoveries={recoveries} deaths={deaths} />
-              {data.resultsByState && <StatesTable data={data.resultsByState} />}
-            </StackPanel>
+            </>
           )}
-          <StackPanel style={styles.helpContainer}>
-            <TouchableOpacity onPress={handleLearnMorePress} style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>Learn more</Text>
-            </TouchableOpacity>
-          </StackPanel>
         </StackPanel>
       </ScrollView>
     </ImageBackground>

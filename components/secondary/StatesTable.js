@@ -1,5 +1,7 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, ActivityIndicator } from 'react-native';
+import { useQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
 import { Feather } from '@expo/vector-icons';
 
 import StackPanel from '../primary/StackPanel';
@@ -7,11 +9,45 @@ import Text from '../primary/Text';
 import { COLORS, FONTFAMILY, SIZES } from '../../constants';
 import StateMapper from '../../utils/StateMapper';
 
+const STATE_STATS = gql`
+  {
+    resultsByState {
+      state
+      recoveries
+      confirmed
+      deaths
+    }
+  }
+`;
+
 export default function StatesTable(props) {
-  const { data } = props;
+  const [stats, setStats] = useState([]);
+
+  const { loading, error, data } = useQuery(STATE_STATS, {
+    onCompleted: () => {
+      setStats(data.resultsByState);
+    },
+  });
+
+  if (error) {
+    return (
+      <StackPanel safe center>
+        <Text> Error fetching states data</Text>
+      </StackPanel>
+    );
+  }
+
+  if (loading) {
+    return (
+      <StackPanel style={styles.container}>
+        <ActivityIndicator size="small" color={COLORS.darkGray} />
+      </StackPanel>
+    );
+  }
+
   return (
     <StackPanel style={styles.container}>
-      {data.map((item) => {
+      {stats.map((item) => {
         return (
           <StackPanel style={styles.stateCard} key={item.state}>
             <StackPanel row style={{ justifyContent: 'space-between' }}>
