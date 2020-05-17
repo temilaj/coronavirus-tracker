@@ -9,11 +9,12 @@ import { COLORS, FONTFAMILY, SIZES } from '../../constants';
 import StateMapper from '../../utils/StateMapper';
 
 export default function StateCard({ item }) {
+  const stateName = StateMapper[item.state] ? StateMapper[item.state].name : item.state;
   return (
     <StackPanel style={styles.stateCard}>
       <StackPanel row style={{ justifyContent: 'space-between' }}>
         <StackPanel flex={false}>
-          <Text>{StateMapper[item.state] || item.state}</Text>
+          <Text>{stateName}</Text>
         </StackPanel>
         <StackPanel flex={false}>
           <StackPanel row>
