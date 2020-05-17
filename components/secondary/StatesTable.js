@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { StyleSheet, ActivityIndicator } from 'react-native';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
-import { Feather } from '@expo/vector-icons';
+import hexToRgba from 'hex-to-rgba';
 
 import StackPanel from '../primary/StackPanel';
 import Text from '../primary/Text';
+import StateCard from './StateCard';
 import { COLORS, FONTFAMILY, SIZES } from '../../constants';
-import StateMapper from '../../utils/StateMapper';
 
 const STATE_STATS = gql`
   {
@@ -47,22 +47,24 @@ export default function StatesTable(props) {
 
   return (
     <StackPanel style={styles.container}>
-      {stats.map((item) => {
-        return (
-          <StackPanel style={styles.stateCard} key={item.state}>
-            <StackPanel row style={{ justifyContent: 'space-between' }}>
-              <StackPanel flex={false}>
-                <Text>{StateMapper[item.state] || item.state}</Text>
-              </StackPanel>
-              <StackPanel flex={false}>
-                <StackPanel row>
-                  <Feather name="bar-chart" color={COLORS.navy} size={SIZES.caption} style={styles.icon} />
-                  <Text style={styles.figureText}>{item.confirmed}</Text>
-                </StackPanel>
-              </StackPanel>
+      <StackPanel style={styles.tableHeader}>
+        <StackPanel row style={{ justifyContent: 'space-between' }}>
+          <StackPanel flex={false}>
+            <Text small style={styles.title}>
+              STATES
+            </Text>
+          </StackPanel>
+          <StackPanel flex={false}>
+            <StackPanel row>
+              <Text small style={styles.confirmedText}>
+                CONFIRMED CASES
+              </Text>
             </StackPanel>
           </StackPanel>
-        );
+        </StackPanel>
+      </StackPanel>
+      {stats.map((item) => {
+        return <StateCard item={item} key={item.state} />;
       })}
     </StackPanel>
   );
@@ -71,18 +73,24 @@ export default function StatesTable(props) {
 const styles = StyleSheet.create({
   container: {
     marginTop: 32,
+    borderColor: hexToRgba(COLORS.lightGray, 0.1),
+    borderWidth: 3,
+    borderRadius: 6,
   },
-  stateCard: {
+  tableHeader: {
     backgroundColor: COLORS.white,
     marginBottom: 4,
     paddingHorizontal: 16,
     paddingVertical: 16,
   },
-  figureText: {
-    fontFamily: FONTFAMILY.copse,
+  title: {
+    lineHeight: SIZES.lineHeightSmallest,
+    fontFamily: FONTFAMILY.openSansBold,
+    letterSpacing: SIZES.letterSpacingDefault,
   },
-  icon: {
-    marginTop: 2,
-    marginRight: 1,
+  confirmedText: {
+    lineHeight: SIZES.lineHeightSmallest,
+    fontFamily: FONTFAMILY.openSansSemiBold,
+    letterSpacing: SIZES.letterSpacingDefault,
   },
 });
